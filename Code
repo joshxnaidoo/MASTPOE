@@ -1,0 +1,213 @@
+// App.js
+import * as React from 'react';
+import { NavigationContainer } from '@react-navigation/native';
+import { createStackNavigator } from '@react-navigation/stack';
+import MainScreen from './components/MainScreen';
+import BookingScreen from './components/BookingScreen';
+import MenuScreen from './components/MenuScreen';
+
+const Stack = createStackNavigator();
+
+function App() {
+  return (
+    <NavigationContainer>
+      <Stack.Navigator initialRouteName="Main">
+        <Stack.Screen name="Main" component={MainScreen} />
+        <Stack.Screen name="Booking" component={BookingScreen} />
+        <Stack.Screen name="Menu" component={MenuScreen} />
+      </Stack.Navigator>
+    </NavigationContainer>
+  );
+}
+
+export default App;
+
+
+
+
+// components/MainScreen.js
+import React from 'react';
+import { View, Button, StyleSheet } from 'react-native';
+
+const MainScreen = ({ navigation }) => {
+  return (
+    <View style={styles.container}>
+      <Button
+        title="View Menu"
+        onPress={() => navigation.navigate('Menu')}
+      />
+      <Button
+        title="Make a Booking"
+        onPress={() => navigation.navigate('Booking')}
+      />
+    </View>
+  );
+};
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+});
+
+export default MainScreen;
+
+
+
+
+// components/BookingScreen.js
+import React, { useState } from 'react';
+import { View, Text, TextInput, Button, StyleSheet } from 'react-native';
+
+const BookingScreen = () => {
+  const [name, setName] = useState('');
+  const [date, setDate] = useState('');
+  const [contact, setContact] = useState('');
+
+  const handleBooking = () => {
+    if (name && date && contact) {
+      alert('Booking Request Sent!');
+    } else {
+      alert('Please fill in all fields');
+    }
+  };
+
+  return (
+    <View style={styles.container}>
+      <TextInput
+        placeholder="Your Name"
+        value={name}
+        onChangeText={setName}
+        style={styles.input}
+      />
+      <TextInput
+        placeholder="Preferred Date"
+        value={date}
+        onChangeText={setDate}
+        style={styles.input}
+      />
+      <TextInput
+        placeholder="Contact Information"
+        value={contact}
+        onChangeText={setContact}
+        style={styles.input}
+      />
+      <Button title="Submit Booking" onPress={handleBooking} />
+    </View>
+  );
+};
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    padding: 20,
+    justifyContent: 'center',
+  },
+  input: {
+    borderWidth: 1,
+    padding: 10,
+    marginVertical: 10,
+    borderRadius: 5,
+  },
+});
+
+export default BookingScreen;
+
+
+
+
+// components/MenuScreen.js
+import React, { useState } from 'react';
+import { View, Text, TextInput, Button, StyleSheet, FlatList } from 'react-native';
+
+const MenuScreen = () => {
+  const [dishName, setDishName] = useState('');
+  const [description, setDescription] = useState('');
+  const [course, setCourse] = useState('');
+  const [price, setPrice] = useState('');
+  const [menuItems, setMenuItems] = useState([]);
+
+  const handleAddItem = () => {
+    if (dishName && description && course && price) {
+      const newItem = {
+        id: Math.random().toString(),
+        name: dishName,
+        description,
+        course,
+        price,
+      };
+      setMenuItems([...menuItems, newItem]);
+      setDishName('');
+      setDescription('');
+      setCourse('');
+      setPrice('');
+    } else {
+      alert('Please fill in all fields');
+    }
+  };
+
+  return (
+    <View style={styles.container}>
+      <TextInput
+        placeholder="Dish Name"
+        value={dishName}
+        onChangeText={setDishName}
+        style={styles.input}
+      />
+      <TextInput
+        placeholder="Description"
+        value={description}
+        onChangeText={setDescription}
+        style={styles.input}
+      />
+      <TextInput
+        placeholder="Course (Starter/Main/Dessert)"
+        value={course}
+        onChangeText={setCourse}
+        style={styles.input}
+      />
+      <TextInput
+        placeholder="Price"
+        value={price}
+        onChangeText={setPrice}
+        style={styles.input}
+      />
+      <Button title="Add Menu Item" onPress={handleAddItem} />
+
+      <FlatList
+        data={menuItems}
+        keyExtractor={(item) => item.id}
+        renderItem={({ item }) => (
+          <View style={styles.item}>
+            <Text>{item.name} - {item.course}</Text>
+            <Text>{item.description}</Text>
+            <Text>Price: {item.price}</Text>
+          </View>
+        )}
+      />
+    </View>
+  );
+};
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    padding: 20,
+  },
+  input: {
+    borderWidth: 1,
+    padding: 10,
+    marginVertical: 10,
+    borderRadius: 5,
+  },
+  item: {
+    padding: 10,
+    borderBottomWidth: 1,
+  },
+});
+
+export default MenuScreen;
+
+
